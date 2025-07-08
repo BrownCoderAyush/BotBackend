@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from "typeorm";
-import { User } from "./User";
+import { Client } from "./Client";
 
 @Entity()
 export class Project {
@@ -12,6 +12,6 @@ export class Project {
   @CreateDateColumn()
   createdAt!: Date;
 
-  @ManyToOne(() => User, { nullable: false })
-  user!: User;
+  @ManyToOne(() => Client, { nullable: false })
+  client!: Client;
 } 

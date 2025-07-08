@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { User } from "../src/models/User";
+import { Client } from "../src/models/Client";
 import { Project } from "../src/models/Project";
 import { Node } from "../src/models/Node";
 import "reflect-metadata";
@@ -16,7 +16,7 @@ const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true,
   logging: false,
-  entities: [User, Project, Node],
+  entities: [Client, Project, Node],
   options: {
     encrypt: false,
     trustServerCertificate: true

@@ -12,6 +12,12 @@ export class Node {
   @Column()
   content!: string;
 
+  @Column({ type: "int" })
+  x!: number;
+
+  @Column({ type: "int" })
+  y!: number;
+  
   @Column()
   type!: string;
 
