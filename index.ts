@@ -188,9 +188,12 @@ const data ={
     }
   ]
 }
+ function convertToSingleLineJSON(data: any): string {
+  return JSON.stringify(data);
+}
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT} (DB init skipped)`);
    let cleaneddata= sanitizeFlowData(data.nodes, data.edges);
-   console.log("Sanitized Flow Data JSON:", JSON.stringify(cleaneddata, null, 2));
+   console.log("Sanitized Flow Data JSON:", JSON.stringify(cleaneddata));
 });
