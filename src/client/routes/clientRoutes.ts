@@ -5,5 +5,6 @@ import { ClientController } from "../controllers/clientController";
 const router = express.Router();
 const clientController = new ClientController();
 router.post("/response", clientController.getResponseFromLLM);
+// router.post("/submit", clientController.submitToDB);
 
 export default router;

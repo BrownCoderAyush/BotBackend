@@ -3,6 +3,8 @@ import { plainToInstance } from "class-transformer";
 import { validateOrReject } from "class-validator";
 import { getCohereResponse } from "../../../config/cohere";
 import { getContext } from "../../../helpers/cohereHelper";
+// import { saveFlowData } from "../../client/services/clientService";
+
 
 export class ClientController {
 
@@ -25,5 +27,38 @@ export class ClientController {
             res.status(500).json({ message: (error as Error).message });
         }
     }
+//      submitToDB =  async (req: Request, res: Response) => {
+//     try {
+//       const {
+//         projectName,
+//         clientName,
+//         clientEmail,
+//         flowData,
+//         nodes,
+//         edges,
+//       } = req.body;
+
+//       if (!projectName || !clientName || !clientEmail || !flowData || !nodes || !edges) {
+//         return res.status(400).json({ message: "Missing required fields" });
+//       }
+
+//       const newFlow = await saveFlowData({
+//         projectName,
+//         clientName,
+//         clientEmail,
+//         flowData,
+//         nodes,
+//         edges,
+//       });
+
+//       res.status(201).json({
+//         message: "Flow data saved successfully",
+//         data: newFlow,
+//       });
+//     } catch (error) {
+//       console.error("Error saving flow:", error);
+//       res.status(500).json({ message: "Internal server error" });
+//     }
+//   };
 
 }
