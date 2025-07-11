@@ -3,7 +3,7 @@ import { Project } from "./Project";
 
 @Entity()
 export class Node {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   nodeId!: number; 
 
   @PrimaryColumn()
