@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import AppDataSource from "./config/db";
 import { Client } from "./src/models/Client";
 import projectRouter from "./src/project/routes/projectRoutes"
@@ -7,7 +8,16 @@ import { getCohereResponse } from "./config/cohere";
 import clientRouter from "./src/client/routes/clientRoutes"
 
 const app = express();
+
+// Enable CORS for all origins
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
+
 initializeTransactionalContext();
 
 

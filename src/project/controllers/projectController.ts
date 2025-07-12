@@ -33,7 +33,7 @@ export class ProjectController {
             const dto = plainToInstance(SubmitProjectDto, req.body);
             await validateOrReject(dto);
 
-            const nodes = await this.NodeService.createNodes(req.body)
+            const nodes = await this.NodeService.createNodes(req.body);
 
             console.log(nodes)
             res.json({

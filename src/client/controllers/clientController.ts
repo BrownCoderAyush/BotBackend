@@ -22,16 +22,21 @@ export class ClientController {
 
             if (!project) throw Error(`Can't find any project with given name : ${projectName} and client email : ${clientEmail}`)
             const context = await getContext(clientEmail, project.id)
-            const content = `You are a helpful assistant that has access to a project's knowledge graph. 
-
-The project contains the following nodes and their relationships:
+            const content = `KNOWLEDGE GRAPH CONTEXT:
 ${context}
 
-Based on this knowledge graph, provide ONLY the direct answer to the user's question: "${query}"
+USER QUESTION: "${query}"
 
-Important: Give ONLY the answer itself. Do not include phrases like "Based on the provided knowledge graph", "The answer is", or any other explanatory text. Just provide the direct answer.
+INSTRUCTIONS:
+1. Search the knowledge graph for the most relevant information
+2. Extract ONLY the specific answer to the question
+3. If multiple nodes contain relevant information, prioritize the most specific match
+4. Return ONLY the answer - no explanations, no context references
+5. If no relevant information exists, respond: "I don't have enough information to answer that question"
+6. Keep the response under 100 words
+7. Use exact terms and names from the context when possible
 
-If the question cannot be answered using the provided context, respond with "I don't have enough information to answer that question."`
+ANSWER:`
             const response = await getCohereResponse(content)
             console.log(response)
             res.status(201).json({
