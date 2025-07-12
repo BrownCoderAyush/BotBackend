@@ -10,21 +10,33 @@ const cohere = new CohereClientV2({
  * @returns The assistant's response.
  */
 export async function getCohereResponse(message: string): Promise<string> {
-  const response = await cohere.chat({
-    model: 'command-a-03-2025',
-    messages: [
-      {
-        role: 'user',
-        content: message,
-      },
-    ],
-  });
+  try {
+    const response = await cohere.chat({
+      model: 'command-r-plus',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a helpful assistant that provides accurate and concise responses based on the provided context. Always respond in a clear, professional manner.'
+        },
+        {
+          role: 'user',
+          content: message,
+        },
+      ],
+      temperature: 0.3,
+      maxTokens: 1000,
+    });
 
-  console.log(message, "msg")
+    console.log('Cohere request message:', message);
+    console.log('Cohere response:', response);
 
-  const content = Array.isArray(response.message?.content)
-    ? response.message.content.map((c) => c.text).join('')
-    : response.message?.content ?? 'No response from Cohere.';
+    const content = Array.isArray(response.message?.content)
+      ? response.message.content.map((c) => c.text).join('')
+      : response.message?.content ?? 'No response from Cohere.';
 
-  return content;
+    return content;
+  } catch (error) {
+    console.error('Cohere API error:', error);
+    return 'I apologize, but I encountered an error while processing your request. Please try again.';
+  }
 }
