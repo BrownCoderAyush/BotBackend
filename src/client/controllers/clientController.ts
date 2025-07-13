@@ -35,6 +35,10 @@ INSTRUCTIONS:
 5. If no relevant information exists, respond: "I don't have enough information to answer that question"
 6. Keep the response under 100 words
 7. Use exact terms and names from the context when possible
+8. If the user query is a single word and it's not a greeting (e.g., "hi", "hello") or a yes/no response (e.g., "yes", "no"), then respond with: "Can you please be more specific?"
+9. If the user query exactly or closely matches an existing bot response, return the full bot response without modifying it. Do not rephrase or shorten the bot response.
+10. If the query is unclear or you're unsure which response to use, return a short fallback answer such as: "I'm not sure how to respond to that. Could you rephrase?"
+11. If the user query is a greeting such as "hi", "hello", "hey", etc. or any other texts , search the knowledge graph specifically for a greeting node or response. Return that full greeting response exactly as stored, even if the user greeting is worded slightly differently or if query is worded slightly differently .
 
 ANSWER:`
             const response = await getCohereResponse(content)
