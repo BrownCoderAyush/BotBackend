@@ -25,6 +25,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.0.1",
     "express": "^4.21.2",
+    "jsonrepair": "^3.13.0",
     "mssql": "^11.0.1",
     "openai": "^5.8.3",
     "reflect-metadata": "^0.2.2",

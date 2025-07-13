@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { plainToInstance } from "class-transformer";
 import { validateOrReject } from "class-validator";
-import { getCohereResponse } from "../../../config/cohere";
+import { getBotFlowFromCohere, getCohereResponse } from "../../../config/cohere";
 import { getContext } from "../../../helpers/cohereHelper";
 import AppDataSource from "../../../config/db";
 import { Client } from "../../models/Client";
@@ -53,6 +53,83 @@ ANSWER:`
             res.status(500).json({ message: (error as Error).message });
         }
     }
+    createFlow = async (req: Request, res: Response) => {
+        try {
+            const query = req.body.query;
+            const clientEmail = req.body.email;
+            const projectName = req.body.projectName;
+
+            // const client = await AppDataSource.manager.findOneBy(Client, { email: clientEmail });
+            // if (!client) throw Error(`Can't find any client with given email: ${clientEmail}`);
+
+            // const project = await AppDataSource.manager.findOneBy(Project, { name: projectName, client: { id: client.id } });
+            // if (!project) throw Error(`Can't find any project with given name: ${projectName} and client email: ${clientEmail}`);
+
+            // const context = await getContext(clientEmail, project.id);
+
+            const content = `You are a bot flow generator.
+
+INSTRUCTION:
+Based on the above knowledge graph context, create a visual bot flow in the following exact JSON format:
+
+{
+  "nodes": [...],
+  "edges": [...]
+}
+
+IMPORTANT RULES:
+- Always begin with a node of type "startNode"
+- The "startNode" must have its "data.label" value set to the project name: "${projectName}"
+- Use the following types for nodes: "startNode", "userMessage", "botResponse"
+- Each node must include:
+  - a unique "id" (e.g., "1", "start", "2")
+  - a valid "position" object like { "x": ..., "y": ... }
+  - a "data" object with appropriate fields:
+    - "label" for startNode
+    - "message", "sender", and "isEditing" for userMessage and botResponse
+- Edges must include:
+  - "source", "target", "id"
+  - "style": { "stroke": "#6366f1", "strokeWidth": 2 }
+  - "animated": true
+- Do NOT return any text outside of the JSON (no markdown, no explanations, no wrapping code blocks)
+- ONLY return the raw JSON object with "nodes" and "edges"
+- The flow should represent a conversation based on this user query: "${query}"`;
+
+
+            const response = await getBotFlowFromCohere(content);
+            console.log("Response--------------------------",JSON.stringify(response))
+
+            // Extract valid JSON from LLM response
+            let flowJson = null;
+            let errorMsg = '';
+            try {
+                let responseStr = typeof response === 'string' ? response : JSON.stringify(response);
+                // Try to extract the first JSON object
+                const match = responseStr.match(/\{[\s\S]*\}/);
+                if (!match) {
+                    errorMsg = 'No valid JSON found in LLM output.';
+                } else {
+                    flowJson = JSON.parse(match[0]);
+                    if (!Array.isArray(flowJson.nodes) || !Array.isArray(flowJson.edges)) {
+                        errorMsg = 'JSON missing nodes or edges array.';
+                        flowJson = null;
+                    }
+                }
+            } catch (err) {
+                errorMsg = 'Malformed JSON from LLM: ' + (err as Error).message;
+            }
+            if (!flowJson) {
+                return res.status(400).json({ message: errorMsg });
+            }
+            res.status(201).json(flowJson);
+        } catch (error) {
+            if (Array.isArray(error)) {
+                return res.status(400).json({ errors: error });
+            }
+            res.status(500).json({ message: (error as Error).message });
+        }
+    };
+
 
 }
 
