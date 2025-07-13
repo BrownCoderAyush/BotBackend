@@ -63,24 +63,17 @@ export async function getBotFlowFromCohere(prompt: string): Promise<string> {
 IMPORTANT:
 - ALWAYS return only valid JSON.
 - JSON must contain: intent, triggers (array of phrases), response (string), and next (null or another intent).
-- Do not add commentary, code blocks, or markdown. Just return raw JSON.
-- Example:
-{
-  "intent": "greeting",
-  "triggers": ["hi", "hello", "hey"],
-  "response": "Hello! How can I help you today?",
-  "next": null
-}`
+- Do not add commentary, code blocks, or markdown. Just return raw JSON.`
         },
         {
           role: 'user',
           content: prompt,
         },
       ],
-      temperature: 0.2,
-      maxTokens: 600,
-      p: 0.9,
-      k: 50,
+      // temperature: 0.2,
+      // maxTokens: 600,
+      // p: 0.9,
+      // k: 50,
     });
 
     console.log('Bot flow prompt:', prompt);

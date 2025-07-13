@@ -70,7 +70,7 @@ ANSWER:`
             const content = `You are a bot flow generator.
 
 INSTRUCTION:
-Based on the above knowledge graph context, create a visual bot flow in the following exact JSON format:
+Create a visual bot flow  based on the Query : ${query} in the following exact JSON format:
 
 {
   "nodes": [...],
@@ -78,7 +78,11 @@ Based on the above knowledge graph context, create a visual bot flow in the foll
 }
 
 IMPORTANT RULES:
-- Always begin with a node of type "startNode"
+- Only output a single valid JSON object with "nodes" and "edges". Do NOT add any explanations, comments, markdown, or extra text.
+- If you cannot output a valid JSON object for any reason, output this minimal valid JSON object instead:
+{"nodes":[{"id":"start","type":"startNode","position":{"x":100,"y":20},"data":{"label":"${projectName}"}}],"edges":[]}
+- Do not add trailing commas. Do not leave any property unfinished. Only output a valid JSON object that can be parsed with JSON.parse().
+- Always begin with a node of type "startNode".
 - The "startNode" must have its "data.label" value set to the project name: "${projectName}"
 - Use the following types for nodes: "startNode", "userMessage", "botResponse"
 - Each node must include:
@@ -91,9 +95,8 @@ IMPORTANT RULES:
   - "source", "target", "id"
   - "style": { "stroke": "#6366f1", "strokeWidth": 2 }
   - "animated": true
-- Do NOT return any text outside of the JSON (no markdown, no explanations, no wrapping code blocks)
-- ONLY return the raw JSON object with "nodes" and "edges"
-- The flow should represent a conversation based on this user query: "${query}"`;
+- The flow should represent a conversation based on this user query: "${query}"
+- Your output MUST be valid JSON. If you are unsure, output the minimal valid JSON above.`;
 
 
             const response = await getBotFlowFromCohere(content);
